@@ -57,6 +57,8 @@ See the [ADRs](docs/adr/) for the key decisions.
 > Reproduce with `python -m nl_sql_analyst evaluate`. Each benchmark question has a reference SQL
 > whose execution defines the correct answer; the analyst is scored on matching it. Unsafe SQL
 > strings check the guardrails.
+>
+> These numbers come from the deterministic offline translator and are reproduced by the test suite in continuous integration (no network, no credentials). In production the provider is Claude behind the same interface, which is where the joins, subqueries, and ranking the offline translator misses are handled; the read-only guardrails apply to its SQL regardless.
 
 | Metric | Value |
 |---|---:|
