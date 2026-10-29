@@ -1,0 +1,55 @@
+---
+title: System Architecture - NL SQL Analyst
+config:
+  theme: base
+  themeVariables:
+    fontFamily: "Inter, system-ui, sans-serif"
+    primaryColor: "#F8FAFC"
+    primaryBorderColor: "#1E293B"
+    primaryTextColor: "#1E293B"
+    lineColor: "#64748B"
+    clusterBkg: "#EEF2FF"
+    clusterBorder: "#94A3B8"
+---
+flowchart TB
+    classDef edge     fill:#F59E0B,stroke:#1E293B,color:#1E293B,stroke-width:1px;
+    classDef core     fill:#6366F1,stroke:#1E293B,color:#ffffff,stroke-width:1px;
+    classDef data     fill:#10B981,stroke:#1E293B,color:#ffffff,stroke-width:1px;
+    classDef control  fill:#0EA5E9,stroke:#1E293B,color:#ffffff,stroke-width:1px;
+    classDef obs      fill:#CBD5E1,stroke:#1E293B,color:#1E293B,stroke-width:1px;
+
+    Client([Client]):::edge
+
+    subgraph Pipe["Analyst pipeline"]
+        direction TB
+        Prompt["Build prompt<br/>schema + question"]:::core
+        Model["Provider<br/>offline translator or Claude"]:::control
+        Guard{"Guardrails<br/>read-only, in-scope, bounded?"}:::control
+        Exec["Execute on SQLite"]:::core
+        Verify["Verify result<br/>columns and rows"]:::core
+    end
+
+    DB[(In-memory SQLite<br/>employees, departments, sales)]:::data
+
+    subgraph Eval["Benchmark"]
+        direction TB
+        Cases[(Questions + reference SQL)]:::data
+        Score["Answer accuracy + guardrail block rate"]:::obs
+    end
+
+    subgraph Edge["Service layer (stdlib HTTP)"]
+        direction TB
+        Router["Router<br/>/health | /ready | /metrics | /ask | /check | /evaluate"]:::core
+    end
+
+    Result["SQL + verified rows"]:::obs
+
+    Prompt --> Model --> Guard
+    Guard -->|unsafe| Result
+    Guard -->|safe| Exec --> Verify
+    DB -.-> Exec
+    Cases --> Score
+    Verify -.-> Score
+    Client -->|question| Router --> Pipe
+    Verify --> Result
+    Result --> Router -->|JSON response| Client
