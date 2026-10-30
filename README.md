@@ -71,6 +71,28 @@ top-N ranking** - which is what the production model is for. The guardrails bloc
 query (drops, deletes, updates, inserts, multi-statement injection, unknown tables, schema changes),
 independent of what the model returns.
 
+### Scale
+
+To check that the pipeline holds up under volume, `benchmarks/scale.py` runs growing synthetic
+query streams (sampled from the labeled benchmark) through the full `Analyst.ask` pipeline -
+translate, guardrail, execute - and through the guardrail on unsafe queries, reporting throughput
+and peak memory (via the standard-library `tracemalloc`) alongside answer accuracy and the block
+rate. The data is synthetic and the numbers are environment-specific; because each ask builds and
+tears down its own in-memory database, throughput and memory are constant in the workload size,
+and accuracy and block rate match the labeled benchmark.
+
+| Queries | Wall-clock (s) | Throughput (queries/s) | Peak memory (MiB) | Accuracy | Block rate |
+|---:|---:|---:|---:|---:|---:|
+| 500 | 1.05 | ~477 | 0.11 | 0.738 | 1.000 |
+| 1,000 | 1.86 | ~539 | 0.04 | 0.751 | 1.000 |
+| 2,000 | 3.71 | ~539 | 0.01 | 0.751 | 1.000 |
+| 4,000 | 7.67 | ~522 | 0.01 | 0.748 | 1.000 |
+
+Answer accuracy holds near 0.75 and the guardrail block rate stays 1.000 across sizes, matching the
+twelve-question benchmark. The accuracy comes from the deterministic offline translator; production
+uses a real language-model API behind the same interface, which is where the joins, subqueries, and
+ranking the offline translator misses are handled. Reproduce with `uv run python benchmarks/scale.py`.
+
 ## Demonstration
 
 ```text
