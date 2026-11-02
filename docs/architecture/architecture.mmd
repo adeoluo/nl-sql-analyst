@@ -1,4 +1,4 @@
-flowchart TD
+flowchart LR
     classDef edge     fill:#F59E0B,stroke:#1E293B,color:#1E293B,stroke-width:1px;
     classDef core     fill:#6366F1,stroke:#1E293B,color:#ffffff,stroke-width:1px;
     classDef data     fill:#10B981,stroke:#1E293B,color:#ffffff,stroke-width:1px;
@@ -17,7 +17,7 @@ flowchart TD
 
     subgraph Pipe["Core logic (analyst pipeline)"]
         direction TB
-        Prompt["Prompt builder<br/>schema + question"]:::core
+        Prompt["Analyst.ask<br/>prompt = schema + question"]:::core
         Fake["FakeProvider<br/>offline keyword translator"]:::core
         Guard{"Guardrails<br/>single SELECT, no banned keywords,<br/>known tables and columns, LIMIT cap"}:::control
         Exec["Execute SQL<br/>sqlite3"]:::core
@@ -40,18 +40,16 @@ flowchart TD
     Client -->|POST JSON| Router
     Cli -->|serve| Router
     Cli -->|question| Prompt
-    Router --> Validate
-    Validate -->|question| Prompt
-    Validate -->|SQL for /check| Guard
-    Schema -.-> Prompt
-    Prompt -->|default| Fake
-    Prompt -.->|optional| Claude
-    Fake -->|candidate SQL| Guard
-    Claude -.->|candidate SQL| Guard
-    Guard -->|safe, limited SQL| Exec
-    Guard -->|unsafe, reasons| Result
-    Db -.-> Exec
-    Exec -->|columns and rows| Result
-    Bench -->|cases| Score
-    Result -.-> Score
+    Router -.->|checks| Validate
+    Router -->|question| Prompt
+    Router -->|/check SQL| Guard
+    Prompt -.->|reads| Schema
+    Prompt -->|prompt, default| Fake
+    Prompt -.->|prompt, optional| Claude
+    Prompt -->|candidate SQL| Guard
+    Prompt -->|safe, limited SQL| Exec
+    Exec -.->|queries| Db
+    Prompt -->|ok, blocked, no_sql| Result
+    Router -->|/evaluate| Score
+    Score -.->|reads| Bench
     Router -.->|timings| Metrics
