@@ -186,6 +186,12 @@ The schema the analyst reasons over, and the evaluation.
   <img src="docs/demo/schema.gif" alt="The schema the analyst reasons over, and the evaluation" width="860">
 </p>
 
+The HTTP service: a question answered with SQL, and a destructive statement refused.
+
+<p align="center">
+  <img src="docs/demo/http.gif" alt="The HTTP service: a question answered with SQL, and a destructive statement refused" width="860">
+</p>
+
 ## Design decisions
 
 - **Validate SQL before executing it.** The model's output is never trusted; a single read-only,
