@@ -34,7 +34,7 @@
 ## Supply chain
 - No third-party runtime packages; the database is the standard-library SQLite and the
   production provider uses the standard-library HTTP client. Development tooling is pinned via
-  `uv.lock`. CodeQL and dependency scanning run in CI.
+  `uv.lock`. CodeQL runs in CI.
 
 ## Residual risk
 - A legitimate but expensive query is allowed within the row limit; a deployment would add a query
