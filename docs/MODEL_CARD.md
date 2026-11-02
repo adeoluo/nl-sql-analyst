@@ -2,7 +2,7 @@
 
 ## Overview
 - **What it is:** a natural-language-to-SQL analyst with read-only guardrails and result
-  verification, executing against a real SQLite database. No third-party dependency.
+  verification, executing against a real SQLite database.
 - **Base model:** pluggable. Offline, a keyword translator is used for tests and CI; in production,
   Anthropic's Claude via the Messages API.
 - **Version and date:** 0.1.0, 2026.

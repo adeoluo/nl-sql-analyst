@@ -32,7 +32,7 @@
   bounds the size of any result.
 
 ## Supply chain
-- Zero third-party runtime dependencies; the database is the standard-library SQLite and the
+- No third-party runtime packages; the database is the standard-library SQLite and the
   production provider uses the standard-library HTTP client. Development tooling is pinned via
   `uv.lock`. CodeQL and dependency scanning run in CI.
 

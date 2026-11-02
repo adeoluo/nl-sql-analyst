@@ -16,6 +16,6 @@ answers in the benchmark.
 ## Consequences
 - Answers are genuine query results, and the guardrails face an actual SQL engine, so a query that
   passes validation but is still invalid fails at execution and is reported.
-- There is no third-party dependency, because SQLite ships with Python.
+- No database server is needed, because SQLite ships with Python.
 - The database is rebuilt per request for isolation, which costs a few milliseconds; a real
   deployment would use a persistent connection pool.

@@ -1,4 +1,4 @@
-"""A dependency-free HTTP service exposing the natural-language-to-SQL analyst.
+"""A standard-library HTTP service exposing the natural-language-to-SQL analyst.
 
 The service answers questions over the sample database, always through the
 guardrails, and reports its accuracy and guardrail coverage. By default it uses the
