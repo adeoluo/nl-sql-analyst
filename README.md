@@ -32,9 +32,15 @@ everything is reproducible with no credentials; a **real Claude provider** power
   <img src="docs/architecture/architecture.svg" alt="Architecture diagram" width="860">
 </p>
 
-A question is combined with the schema into a prompt; the provider returns SQL; the guardrails
-validate it; only if it is safe is it executed against the in-memory database; and the result is
-returned with its columns. The same pipeline runs against a labeled benchmark to measure accuracy.
+<sub>Legend: amber = entry points and external systems, indigo = core logic, green = data and state, blue = validation and control, grey = observability and outputs.</sub>
+
+A question arrives from the CLI or the HTTP service (which bounds its length) and is combined
+with the schema into a prompt. The provider (the offline keyword translator by default, or an
+injected Anthropic client) returns candidate SQL, and the guardrails require a single in-scope
+`SELECT` with no banned keywords and cap it with a `LIMIT`. Only safe SQL is executed against
+the seeded in-memory SQLite database; the result carries its status, columns, and rows, or the
+reasons it was blocked. The same pipeline runs against a labeled benchmark to measure answer
+accuracy and the guardrail block rate on unsafe SQL.
 See the [ADRs](docs/adr/) for the key decisions.
 
 ### What it implements
