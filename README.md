@@ -164,6 +164,28 @@ pure function, tested without a socket.
 | POST | `/check` | body `{"sql": str}`; whether the SQL passes the guardrails |
 | GET | `/evaluate` | answer accuracy and guardrail block rate on the benchmark |
 
+### Demos
+
+Recorded from real runs with [vhs](https://github.com/charmbracelet/vhs); each tape is in `docs/demo/`.
+
+Questions translated to SQL and answered from the database.
+
+<p align="center">
+  <img src="docs/demo/ask.gif" alt="Questions translated to SQL and answered from the database" width="860">
+</p>
+
+The SQL guard: a read is allowed, a destructive statement is refused.
+
+<p align="center">
+  <img src="docs/demo/guard.gif" alt="The SQL guard: a read is allowed, a destructive statement is refused" width="860">
+</p>
+
+The schema the analyst reasons over, and the evaluation.
+
+<p align="center">
+  <img src="docs/demo/schema.gif" alt="The schema the analyst reasons over, and the evaluation" width="860">
+</p>
+
 ## Design decisions
 
 - **Validate SQL before executing it.** The model's output is never trusted; a single read-only,
