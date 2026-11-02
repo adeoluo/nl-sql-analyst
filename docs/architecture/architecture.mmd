@@ -5,51 +5,42 @@ flowchart LR
     classDef control  fill:#0EA5E9,stroke:#1E293B,color:#ffffff,stroke-width:1px;
     classDef obs      fill:#CBD5E1,stroke:#1E293B,color:#1E293B,stroke-width:1px;
 
-    Client(["HTTP client<br/>JSON request"]):::edge
-    Cli(["CLI<br/>ask, check, evaluate, schema, serve"]):::edge
-    Claude(["Anthropic Messages API<br/>injectable, needs API key"]):::edge
-
-    subgraph Io["Interfaces (stdlib HTTP)"]
+    subgraph Interfaces["Interfaces"]
         direction TB
-        Router["Request router<br/>/ask, /check, /evaluate, /health"]:::core
-        Validate["Request validation<br/>question up to 2000 chars, SQL up to 5000"]:::control
+        Cli(["CLI<br/>ask, check, evaluate"]):::edge
+        Client(["HTTP client<br/>JSON question"]):::edge
+        Router["HTTP router<br/>/ask, /check, /evaluate"]:::core
+        Validate["Validation<br/>question, SQL length"]:::control
+        Cli ~~~ Client --> Router --> Validate
     end
 
-    subgraph Pipe["Core logic (analyst pipeline)"]
+    subgraph Core["Analyst pipeline"]
         direction TB
-        Prompt["Analyst.ask<br/>prompt = schema + question"]:::core
-        Fake["FakeProvider<br/>offline keyword translator"]:::core
-        Guard{"Guardrails<br/>single SELECT, no banned keywords,<br/>known tables and columns, LIMIT cap"}:::control
+        Analyst["Analyst.ask<br/>schema + question"]:::core
+        Fake["FakeProvider<br/>offline translator"]:::core
+        Guard["Guardrails<br/>read-only SELECT, LIMIT"]:::control
         Exec["Execute SQL<br/>sqlite3"]:::core
+        Claude(["Anthropic API<br/>optional, injected"]):::edge
+        Analyst --> Fake --> Guard --> Exec ~~~ Claude
     end
 
     subgraph State["Data and state"]
         direction TB
-        Schema[("Schema text<br/>employees, departments, sales")]:::data
-        Db[("In-memory SQLite<br/>seeded, built per query")]:::data
-        Bench[("Benchmark<br/>questions with reference SQL,<br/>unsafe SQL cases")]:::data
+        Schema[("Schema<br/>employees, sales")]:::data
+        Db[("In-memory SQLite<br/>seeded per query")]:::data
+        Bench[("Benchmark<br/>reference, unsafe SQL")]:::data
+        Schema ~~~ Db ~~~ Bench
     end
 
     subgraph Obs["Evaluation and outputs"]
         direction TB
-        Result["AnalystResult<br/>ok, blocked, or no_sql"]:::obs
+        Result["AnalystResult<br/>ok, blocked, no_sql"]:::obs
         Score["Answer accuracy<br/>guardrail block rate"]:::obs
-        Metrics["/metrics<br/>Prometheus counts, latency"]:::obs
+        Metrics["/metrics<br/>Prometheus text"]:::obs
+        Result --> Score ~~~ Metrics
     end
 
-    Client -->|POST JSON| Router
-    Cli -->|serve| Router
-    Cli -->|question| Prompt
-    Router -.->|checks| Validate
-    Router -->|question| Prompt
-    Router -->|/check SQL| Guard
-    Prompt -.->|reads| Schema
-    Prompt -->|prompt, default| Fake
-    Prompt -.->|prompt, optional| Claude
-    Prompt -->|candidate SQL| Guard
-    Prompt -->|safe, limited SQL| Exec
-    Exec -.->|queries| Db
-    Prompt -->|ok, blocked, no_sql| Result
-    Router -->|/evaluate| Score
-    Score -.->|reads| Bench
-    Router -.->|timings| Metrics
+    Interfaces -->|question, SQL| Core
+    Core -.->|reads| State
+    State -.->|cases| Obs
+    Core -->|results| Obs
