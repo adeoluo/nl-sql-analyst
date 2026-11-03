@@ -1,0 +1,35 @@
+# NL SQL Analyst
+
+> A natural-language-to-SQL analyst powered by a plugged-in language model, with read-only guardrails and result verification. Questions become SQL that is validated before it runs and executed against a real SQLite database.
+
+Languages: Python. License: MIT. Source: https://github.com/adeoluo/nl-sql-analyst
+
+## Docs
+
+- [README](https://github.com/adeoluo/nl-sql-analyst/blob/main/README.md): motivation, architecture, results, quickstart, usage, design decisions, testing, responsible ai, limitations, roadmap
+- [AGENTS.md](https://github.com/adeoluo/nl-sql-analyst/blob/main/AGENTS.md): layout, commands and conventions for changing the code
+- [Architecture diagram](https://github.com/adeoluo/nl-sql-analyst/blob/main/docs/architecture/architecture.mmd): Mermaid source of the component diagram
+- [Data Card - NL SQL Analyst](https://github.com/adeoluo/nl-sql-analyst/blob/main/docs/DATA_CARD.md)
+- [Definition of Done](https://github.com/adeoluo/nl-sql-analyst/blob/main/docs/DEFINITION_OF_DONE.md)
+- [Evaluation Report - NL SQL Analyst](https://github.com/adeoluo/nl-sql-analyst/blob/main/docs/EVALUATION_REPORT.md)
+- [Model / System Card - NL SQL Analyst](https://github.com/adeoluo/nl-sql-analyst/blob/main/docs/MODEL_CARD.md)
+- [Threat Model - NL SQL Analyst](https://github.com/adeoluo/nl-sql-analyst/blob/main/docs/THREAT_MODEL.md)
+- [ADR-0001: Record architecture decisions](https://github.com/adeoluo/nl-sql-analyst/blob/main/docs/adr/0001-record-architecture-decisions.md)
+- [ADR-0002: Validate generated SQL before executing it](https://github.com/adeoluo/nl-sql-analyst/blob/main/docs/adr/0002-guardrails.md)
+- [ADR-0003: Execute against a real SQLite database](https://github.com/adeoluo/nl-sql-analyst/blob/main/docs/adr/0003-real-execution.md)
+- [ADR-NNNN: <short title>](https://github.com/adeoluo/nl-sql-analyst/blob/main/docs/adr/template.md)
+- [Changelog](https://github.com/adeoluo/nl-sql-analyst/blob/main/CHANGELOG.md): release history
+
+## Source
+
+- [src/nl_sql_analyst/__init__.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/__init__.py): NL SQL Analyst - natural-language questions answered with guarded SQL.
+- [src/nl_sql_analyst/analyst.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/analyst.py): The analyst pipeline: question to SQL to guardrail to execution to verified result.
+- [src/nl_sql_analyst/cli.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/cli.py): Command line interface for the natural-language-to-SQL analyst.
+- [src/nl_sql_analyst/data.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/data.py): A labeled benchmark of questions with a reference SQL for ground-truth answers.
+- [src/nl_sql_analyst/database.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/database.py): An in-memory SQLite database with a small analytics schema and sample data.
+- [src/nl_sql_analyst/evaluation.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/evaluation.py): Evaluation: answer accuracy against reference SQL and guardrail block rate.
+- [src/nl_sql_analyst/guardrails.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/guardrails.py): Guardrails that validate generated SQL before it is executed.
+- [src/nl_sql_analyst/observability.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/observability.py): In-process request metrics for the HTTP service (Prometheus text exposition).
+- [src/nl_sql_analyst/provider.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/provider.py): The language-model provider interface, a deterministic fake, and a real client.
+- [src/nl_sql_analyst/service.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/service.py): A standard-library HTTP service exposing the natural-language-to-SQL analyst.
+- [src/nl_sql_analyst/translate.py](https://github.com/adeoluo/nl-sql-analyst/blob/main/src/nl_sql_analyst/translate.py): A deterministic keyword-based natural-language-to-SQL translator.
