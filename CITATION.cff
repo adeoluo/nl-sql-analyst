@@ -1,10 +1,22 @@
 cff-version: 1.2.0
-message: "If you use this work, please cite it."
-title: "Nl Sql Analyst"
+message: "If you use this software, please cite it as below."
+type: software
+title: "NL SQL Analyst"
+abstract: "A natural-language-to-SQL analyst powered by a plugged-in language model, with read-only guardrails and result verification; validated SQL runs against a real SQLite database and is evaluated for answer accuracy and guardrail coverage."
 authors:
   - family-names: "Ogunnoiki"
     given-names: "Adeolu"
-version: 0.1.0
-date-released: 2026-01-01
+version: "0.1.0"
+date-released: "2026-11-03"
 license: MIT
+repository-code: "https://github.com/adeoluo/nl-sql-analyst"
 url: "https://github.com/adeoluo/nl-sql-analyst"
+keywords:
+  - "anthropic"
+  - "data-analysis"
+  - "guardrails"
+  - "llm"
+  - "nl2sql"
+  - "python"
+  - "sql"
+  - "text-to-sql"
