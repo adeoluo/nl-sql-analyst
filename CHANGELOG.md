@@ -4,6 +4,26 @@ All notable changes to this project are documented here. The file is generated
 from Conventional Commits by [git-cliff](https://git-cliff.org) when a release is cut
 with `make cut-release`.
 
+## [0.1.1] 2026-11-09
+
+### Bug fixes
+
+- Current Claude model and Messages API version, with a request shape test (#9)
+
+### Documentation
+
+- Complete citation metadata and bump it on release (#6)
+- Diagrams on white in the shared theme, make diagram for every diagram, and a self-contained Definition of Done (#8)
+
+### Build and CI
+
+- Build and attach the sdist and wheel to every release (#10)
+
+### Maintenance
+
+- Latest toolchain and CI versions (#5)
+- Release script keeps hard-coded version strings in step (#7)
+
 ## [0.1.0] 2026-11-03
 
 ### Features

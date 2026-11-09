@@ -10,7 +10,7 @@ from nl_sql_analyst.guardrails import GuardrailResult, check_sql
 from nl_sql_analyst.provider import AnthropicProvider, FakeProvider, Provider
 from nl_sql_analyst.translate import translate
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "Analyst",
